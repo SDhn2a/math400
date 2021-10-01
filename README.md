@@ -1,2 +1,2 @@
-# cs321
-general repo for AI
+# math400
+general repo for math comps

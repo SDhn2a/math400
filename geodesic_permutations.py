@@ -7,12 +7,30 @@ import pyvis.network
 SOLUTIONS_LIST = []
 
 
+def create_transpositions_list_alt(current_list, current_length, target_length):
+    if current_length == target_length:
+        SOLUTIONS_LIST.append(current_list)
+        return None
+    for pos in range(len(current_list)+1):
+        new_list = []
+        for i in range(pos):
+            new_list.append(current_list[i]+1)
+        for i in range(current_length):
+            new_list.append(i)
+        for i in range(len(current_list)-pos):
+            new_list.append(current_list[i+pos])
+        create_transpositions_list_alt(
+            new_list, current_length+1, target_length)
+
+
 def create_transpositions_list(current_list, current_result):
     length = len(current_result.keys())
     for i in range(length-1):
         # if i > len(current_list):
         #     break
         if len(current_list) > 0 and i > current_list[-1]+1:
+            break
+        if len(current_list) > length-1 and current_list[-1] == length-2 and current_list[1-length] == 0 and current_list[-length] < i:
             break
         temp_low = current_result.get(i)
         temp_high = current_result.get(i+1)
@@ -56,12 +74,14 @@ def graph_transposition_list(transposition_list):
 
 
 if __name__ == '__main__':
-    starting_arrangement = {}
-    for i in range(int(sys.argv[1])):
-        starting_arrangement.update({i: i})
-    create_transpositions_list([], starting_arrangement)
+    # starting_arrangement = {}
+    # for i in range(int(sys.argv[1])):
+    #     starting_arrangement.update({i: i})
+    # create_transpositions_list([], starting_arrangement)
+    create_transpositions_list_alt([], 1, int(sys.argv[1]))
     # print(SOLUTIONS_LIST)
-    for transposition_list in SOLUTIONS_LIST:
-        graph_transposition_list(transposition_list)
+    if(len(sys.argv) > 2):
+        for transposition_list in SOLUTIONS_LIST:
+            graph_transposition_list(transposition_list)
     print(len(SOLUTIONS_LIST))
     # graph_transposition_list(SOLUTIONS_LIST[0])
